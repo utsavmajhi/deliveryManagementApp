@@ -1,0 +1,2 @@
+-keep class com.amazonaws.** { *; }
+-keep class com.amplifyframework.** { *; }
