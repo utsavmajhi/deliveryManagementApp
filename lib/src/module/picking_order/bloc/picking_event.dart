@@ -8,8 +8,7 @@ class PickingItemInitial extends PickingEvent{
 }
 class PickingItemAdd extends PickingEvent{
   final String id;
-  final String storeId;
-  PickingItemAdd(this.id,this.storeId);
+  PickingItemAdd(this.id);
 }
 class PickingItemDelete extends PickingEvent{
   final CartonModel cartonObj;
@@ -18,8 +17,9 @@ class PickingItemDelete extends PickingEvent{
 class PickingItemSubmit extends PickingEvent{
   final List<CartonModel> validatedCartonsList;
   final String userId;
-  final Warehouse warehouse;
-  PickingItemSubmit(this.validatedCartonsList,this.userId,this.warehouse);
+  final VehicleModel vehicle;
+  final String pickLoc;
+  PickingItemSubmit(this.validatedCartonsList,this.userId,this.vehicle,this.pickLoc);
 }
 
 class PickingItemEnteredId extends PickingEvent{

@@ -5,6 +5,7 @@ import 'package:delivery_management_app/src/models/carton_model.dart';
 import 'package:delivery_management_app/src/models/warehouse_list_model.dart';
 import 'package:logging/logging.dart';
 import '../models/carton_pick_model.dart';
+import '../models/carton_receive_submit_model.dart';
 import '../util/helper/rest_api.dart';
 
 class PickingRepository {
@@ -14,15 +15,13 @@ class PickingRepository {
 
   PickingRepository({required this.restClient});
 
-  Future<List<CartonModel>> getCartonListById(String id, String storeId,String type) async {
-    log.info("Fetching Carton list /getCartonsById?requestID=${id}&storeID=${storeId}");
+  Future<List<CartonModel>> getCartonListById(String id) async {
+    log.info("Fetching Carton list /getCartonsById?requestID=${id}");
     var resp = await restClient.get(
         restOptions: RestOptions(
-            path: "/getCartonsById?requestID=${id}&storeID=${storeId}&type=${type}",
+            path: "/getCartonsById?requestID=${id}",
             queryParameters: {
               "requestID": id,
-              "storeID": storeId,
-              "type":type
         }
         ));
     var rawList = restClient.parsedResponse(resp);
@@ -32,6 +31,21 @@ class PickingRepository {
     return cartonList;
   }
 
+  Future<List<CartonModel>> getDeliveryItemsByVehicleId(String id) async {
+    log.info("Fetching Carton list /getCartonsByTruckId?truckID=${id}");
+    var resp = await restClient.get(
+        restOptions: RestOptions(
+            path: "/getCartonsByTruckId?truckID=${id}",
+            queryParameters: {
+              "truckID": id,
+            }
+        ));
+    var rawList = restClient.parsedResponse(resp);
+    List<CartonModel> cartonList = (rawList['cartons'] as List<dynamic>)
+        .map((item) => CartonModel.fromJson(item))
+        .toList();
+    return cartonList;
+  }
   dynamic pickCartons(List<CartonPickModel> cartonPickedList) async {
     log.info("Picked Cartons Submit");
     Map<String, dynamic> data = {"items":cartonPickedList};
@@ -45,7 +59,7 @@ class PickingRepository {
     return rawList;
   }
 
-  dynamic deliveryCartons(List<CartonPickModel> cartonPickedList) async {
+  dynamic deliveryCartons(List<CartonReceiveSubmitModel> cartonPickedList) async {
     log.info("Picked Cartons Submit");
     Map<String, dynamic> data = {"items":cartonPickedList};
     String body = jsonEncode(data);

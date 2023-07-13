@@ -1,9 +1,10 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:delivery_management_app/src/module/login/login_view_mobile.dart';
+import 'package:delivery_management_app/src/module/vehicle_selection/vehicle_selection.dart';
 
 
-import 'package:delivery_management_app/src/module/warehouse_selection/warehouse_selection.dart';
 import 'package:delivery_management_app/src/repository/picking_repo.dart';
+import 'package:delivery_management_app/src/repository/vehicle_repo.dart';
 import 'package:delivery_management_app/src/repository/warehouse_repo.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (context) => restClient),
         RepositoryProvider(create: (context) => WarehouseRepository(restClient: restClient)),
         RepositoryProvider(create: (context) => PickingRepository(restClient: restClient)),
+        RepositoryProvider(create: (context) => VehicleRepository(restClient: restClient)),
 
       ],
       child: MultiBlocProvider(
@@ -81,7 +83,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  WarehouseSelectionScreen.route(),
+                  VehicleSelectionScreen.route(),
                   (route) => false,
                 );
                 break;

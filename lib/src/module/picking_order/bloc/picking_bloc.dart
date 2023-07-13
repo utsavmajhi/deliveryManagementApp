@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:delivery_management_app/src/models/carton_model.dart';
 import 'package:delivery_management_app/src/models/carton_pick_model.dart';
 import 'package:delivery_management_app/src/models/error_model.dart';
+import 'package:delivery_management_app/src/models/vehicle_model.dart';
 import 'package:delivery_management_app/src/repository/picking_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,7 +45,7 @@ class PickingBloc extends Bloc<PickingEvent, PickingState> {
     String id = event.id;
     try {
       log.info("Getting getAllCartons list");
-      var resp = await pickingRepo.getCartonListById(id,event.storeId,"pick");
+      var resp = await pickingRepo.getCartonListById(id);
       Set<CartonModel> cartonSet = Set<CartonModel>.from(state.cartonList);
       for(var res in resp){
         if(!(state.cartonList.any((carton) => carton.cartonID == res.cartonID))){
@@ -96,9 +97,9 @@ class PickingBloc extends Bloc<PickingEvent, PickingState> {
     emit(state.copyWith(status: PickingStatus.submit));
     List<CartonPickModel> modifiedList = selectedCartonList.map((e) => CartonPickModel(
       cartonID: e.cartonID,
-      storeID:event.warehouse.id,
-      storeDesc: event.warehouse.name,
-      user: event.userId
+      vehicleID: event.vehicle.vehicleID,
+      user: event.userId,
+      pickLoc: event.pickLoc
     )).toList();
     try {
       await pickingRepo.pickCartons(modifiedList);

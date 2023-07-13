@@ -1,4 +1,6 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:delivery_management_app/src/models/loc_model.dart';
+import 'package:delivery_management_app/src/models/vehicle_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
@@ -23,6 +25,8 @@ class AuthenticationBloc
     on<LogOutUserEvent>(_logOutUser);
     on<WarehouseLoginEvent>(_onWarehouseLogin);
     on<WarehouseSelectEvent>(_onWarehouseSelectEvent);
+    on<VehicleSelectEvent>(_onVehicleSelectEvent);
+    on<LocSelectEvent>(_onLocSelectEvent);
   }
   // signInIfSessionAvailable() async {
   //   log.info('Getting if user already present');
@@ -116,8 +120,6 @@ class AuthenticationBloc
   }
   void _onWarehouseSelectEvent(
       WarehouseSelectEvent event, Emitter<AuthenticationState> emit) async {
-
-    print("MEOW _onWarehouseSelectEvent ${event.warehouseId}");
     if (event.warehouseId != null) {
       emit(AuthenticationState.warehouseSelected(
           Warehouse(
@@ -126,4 +128,28 @@ class AuthenticationBloc
       ));
     }
   }
+  void _onVehicleSelectEvent(
+      VehicleSelectEvent event, Emitter<AuthenticationState> emit) async {
+    if (event.vehicleId != null) {
+      emit(AuthenticationState.vehicleSelected(
+          VehicleModel(
+            vehicleID: event.vehicleId!, vehicleDesc: event.vehicleDesc ?? '',
+              typeOfVehicle: event.vehicleType
+          )
+      ));
+    }
+  }
+
+  void _onLocSelectEvent(
+      LocSelectEvent event, Emitter<AuthenticationState> emit) async {
+    if (event.locDesc != null) {
+      emit(AuthenticationState.locSelected(
+          LocModel(
+              locID: event.locId!, locDesc: event.locDesc ?? '',
+              locType: event.locType
+          )
+      ));
+    }
+  }
+
 }

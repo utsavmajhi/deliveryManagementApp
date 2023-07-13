@@ -11,6 +11,11 @@ class DeliveryItemAdd extends DeliveryEvent{
   final String storeId;
   DeliveryItemAdd(this.id,this.storeId);
 }
+
+class DeliveryItemsFetchByVehicleId extends DeliveryEvent{
+  final String vehicleId;
+  DeliveryItemsFetchByVehicleId(this.vehicleId);
+}
 class DeliveryItemDelete extends DeliveryEvent{
   final CartonModel cartonObj;
   DeliveryItemDelete(this.cartonObj);
@@ -18,13 +23,14 @@ class DeliveryItemDelete extends DeliveryEvent{
 class DeliveryItemSubmit extends DeliveryEvent{
   final List<CartonModel> validatedCartonsList;
   final String userId;
-  final Warehouse warehouse;
-  DeliveryItemSubmit(this.validatedCartonsList,this.userId,this.warehouse);
+  final String receivedBy;
+  final String locId;
+  DeliveryItemSubmit(this.validatedCartonsList,this.userId,this.receivedBy,this.locId);
 }
 
-class DeliveryItemEnteredId extends DeliveryEvent{
-  String bolCartonId;
-  DeliveryItemEnteredId(this.bolCartonId);
+class DeliveryItemReceiverEnteredId extends DeliveryEvent{
+  String receiversid;
+  DeliveryItemReceiverEnteredId(this.receiversid);
 }
 class DeliveryItemResetFailureState extends DeliveryEvent{
   DeliveryItemResetFailureState();

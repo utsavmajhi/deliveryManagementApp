@@ -34,3 +34,16 @@ class WarehouseSelectEvent extends AuthenticationEvent{
   final String? warehouseDesc;
   WarehouseSelectEvent(this.warehouseId,this.warehouseDesc);
 }
+class VehicleSelectEvent extends AuthenticationEvent{
+  final String? vehicleId;
+  final String? vehicleDesc;
+  final String? vehicleType;
+  VehicleSelectEvent(this.vehicleId,this.vehicleDesc,this.vehicleType);
+}
+
+class LocSelectEvent extends AuthenticationEvent{
+  final String? locId;
+  final String? locDesc;
+  final String? locType;
+  LocSelectEvent(this.locId,this.locDesc,this.locType);
+}

@@ -1,5 +1,6 @@
 import 'package:delivery_management_app/src/models/carton_history.dart';
 import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
+import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
 import 'package:delivery_management_app/src/module/dashboard/home_screen.dart';
 import 'package:delivery_management_app/src/module/picking_order/bloc/picking_bloc.dart';
 import 'package:delivery_management_app/src/widgets/curving_container.dart';
@@ -24,33 +25,6 @@ class TrackingOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final authenticationStates = context.read<AuthenticationBloc>().state;
-
-    void _showFailureDialog(
-        BuildContext context, String message, String lottieAssetPath) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Container(
-              height: 150,
-              child: Column(
-                children: [
-                  Lottie.asset(
-                    '${lottieAssetPath}', // Replace with your animation file
-                    width: 100,
-                    height: 100,
-                  ),
-                  Text(message),
-                ],
-              ),
-            ),
-            // Lottie.asset('assets/lottie/loading.zip'),
-          );
-        },
-      );
-    }
 
     return BlocProvider(
       create: (context) =>
@@ -123,7 +97,7 @@ class TrackingOrder extends StatelessWidget {
                                         width: 5,
                                       ),
                                       Text(
-                                        "Warehouse: ${authenticationStates.warehouse?.name}",
+                                        "Vehicle: ${UserDetail.vehicle?.vehicleID}",
                                         style: TextStyle(
                                           fontFamily: 'Montserrat Medium',
                                           color: Colors.white,
@@ -171,9 +145,9 @@ class TrackingOrder extends StatelessWidget {
                                     title: () {
                                       switch (item.eventType) {
                                         case 'Pick':
-                                          return "Carton Picked at ${item.storeDesc}";
+                                          return "Carton Picked at ${item.location}";
                                         case 'Receive':
-                                          return "Carton Received at ${item.storeDesc}";
+                                          return "Carton Received at ${item.location}";
                                         default:
                                           return "No Action";
                                       }
@@ -318,9 +292,7 @@ class _SearchBarState extends State<SearchBar> {
                   onSubmitted: (value) {
                     BlocProvider.of<TrackingBloc>(context)
                         .add(TrackingItemSearch(
-                        getTextFromTextField(),
-                        authenticationStates
-                            .warehouse!.id));
+                        getTextFromTextField()));
                     textFieldController.clear();
                   },
                   controller: textFieldController,
@@ -337,9 +309,7 @@ class _SearchBarState extends State<SearchBar> {
                     if (state.status != TrackingStatus.loading) {
                       BlocProvider.of<TrackingBloc>(context)
                           .add(TrackingItemSearch(
-                          getTextFromTextField(),
-                          authenticationStates
-                              .warehouse!.id));
+                          getTextFromTextField()));
                       textFieldController.clear();
                     }
                   },

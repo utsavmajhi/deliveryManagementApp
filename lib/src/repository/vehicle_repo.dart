@@ -1,10 +1,11 @@
-import 'package:delivery_management_app/src/models/loc_model.dart';
+import 'package:delivery_management_app/src/models/entity_model.dart';
+import 'package:delivery_management_app/src/models/vehicle_model.dart';
 import 'package:delivery_management_app/src/models/warehouse_list_model.dart';
 import 'package:logging/logging.dart';
 import '../util/helper/rest_api.dart';
 
-class WarehouseRepository {
-  final log = Logger('WarehouseRepository');
+class VehicleRepository {
+  final log = Logger('VehicleRepository');
 
   // Response resp = Response(
   //   "[{\"pickId\":\"10001\",\"pickUser\":\"USR001\",\"fulfillmentId\":\"QTAE00000010001_1\",\"customerOrderId\":\"QTAE00000010001\",\"storeId\":\"101\",\"customerId\":\"CP432324242\",\"orderType\":\"PURCHASE\",\"deliveryType\":\"90MinutesDelivery\",\"deliveryDate\":\"2022-08-05T05:50:49Z\",\"deliveryWindow\":\"\",\"orderStatus\":\"READY_FOR_PICK\",\"comment\":\"\",\"orderDate\":\"2022-08-04T05:50:49Z\",\"shipmentCarrierId\":\"UPS\",\"allowPartialDelivery\":\"N\",\"department\":\"Home\"},{\"pickId\":\"10002\",\"pickUser\":\"USR001\",\"fulfillmentId\":\"QTAE00000010004_1\",\"customerOrderId\":\"QTAE00000010004\",\"storeId\":\"101\",\"customerId\":\"CP430424242\",\"orderType\":\"PURCHASE\",\"deliveryType\":\"90MinutesDelivery\",\"deliveryDate\":\"2022-08-05T05:50:49Z\",\"deliveryWindow\":\"\",\"orderStatus\":\"READY_FOR_PICK\",\"comment\":\"\",\"orderDate\":\"2022-08-04T05:50:49Z\",\"shipmentCarrierId\":\"UPS\",\"allowPartialDelivery\":\"N\",\"department\":\"Home\"},{\"pickId\":\"10003\",\"pickUser\":\"USR001\",\"fulfillmentId\":\"QTAE00000010007_1\",\"customerOrderId\":\"QTAE00000010007\",\"storeId\":\"101\",\"customerId\":\"CP432124242\",\"orderType\":\"PURCHASE\",\"deliveryType\":\"90MinutesDelivery\",\"deliveryDate\":\"2022-08-05T05:50:49Z\",\"deliveryWindow\":\"\",\"orderStatus\":\"READY_FOR_PICK\",\"comment\":\"\",\"orderDate\":\"2022-08-04T05:50:49Z\",\"shipmentCarrierId\":\"UPS\",\"allowPartialDelivery\":\"N\",\"department\":\"Home\"},{\"pickId\":\"10004\",\"pickUser\":\"USR001\",\"fulfillmentId\":\"QTAE00000010008_1\",\"customerOrderId\":\"QTAE00000010008\",\"storeId\":\"101\",\"customerId\":\"CP432424742\",\"orderType\":\"PURCHASE\",\"deliveryType\":\"90MinutesDelivery\",\"deliveryDate\":\"2022-08-05T05:50:49Z\",\"deliveryWindow\":\"\",\"orderStatus\":\"READY_FOR_PICK\",\"comment\":\"\",\"orderDate\":\"2022-08-04T05:50:49Z\",\"shipmentCarrierId\":\"UPS\",\"allowPartialDelivery\":\"N\",\"department\":\"Home\"},{\"pickId\":\"10005\",\"pickUser\":\"USR001\",\"fulfillmentId\":\"QTAE00000010009_1\",\"customerOrderId\":\"QTAE00000010009\",\"storeId\":\"101\",\"customerId\":\"CP432494242\",\"orderType\":\"PURCHASE\",\"deliveryType\":\"90MinutesDelivery\",\"deliveryDate\":\"2022-08-05T05:50:49Z\",\"deliveryWindow\":\"\",\"orderStatus\":\"READY_FOR_PICK\",\"comment\":\"\",\"orderDate\":\"2022-08-04T05:50:49Z\",\"shipmentCarrierId\":\"UPS\",\"allowPartialDelivery\":\"N\",\"department\":\"Home\"}]",
@@ -18,32 +19,16 @@ class WarehouseRepository {
 
   final RestApiClient restClient;
 
-  WarehouseRepository({required this.restClient});
+  VehicleRepository({required this.restClient});
 
-  Future<String> getWarehouseDetail(String barcode) async {
-    log.info("Fethching warehouse details for barcode: $barcode");
-    return "Abstract Warehouse";
-  }
-
-  Future<List<WarehouseModel>> getWarehouseList() async {
-    log.info("Fetching warehouses list");
-    var resp = await restClient.get(
-        restOptions: RestOptions(
-          path: "/allLoc"
-        ));
-    var rawList = restClient.parsedResponse(resp);
-    List<dynamic> storesList = rawList['stores'].toList();
-    return storesList.map((e) => WarehouseModel.fromJson(e)).toList();
-  }
-
-  Future<List<LocModel>> getAllLocationsList() async {
+  Future<List<VehicleModel>> getVehiclesList() async {
     log.info("Fetching Vehicles list");
     var resp = await restClient.get(
         restOptions: RestOptions(
-            path: "/lov?entityType=LOC"
+          path: "/lov?entityType=TRUCK"
         ));
     var rawList = restClient.parsedResponse(resp);
     List<dynamic> vehiclesList = rawList['entities'].toList();
-    return vehiclesList.map((e) => LocModel(locID: e['entityID'],locDesc: e['entityDesc'],locType: e['entityType'])).toList();
+    return vehiclesList.map((e) => VehicleModel(vehicleID: e['entityID'],vehicleDesc: e['entityDesc'],typeOfVehicle: e['entityType'])).toList();
   }
 }

@@ -23,9 +23,9 @@ class DeliveryOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final authenticationStates = context.read<AuthenticationBloc>().state;
-
+    print("MEOW LOC DETAILS ${authenticationStates.location?.locID}");
     return BlocProvider(
-      create: (context) => DeliveryBloc(pickingRepo: RepositoryProvider.of(context)),
+      create: (context) => DeliveryBloc(pickingRepo: RepositoryProvider.of(context))..add(DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??"")),
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -89,7 +89,7 @@ class DeliveryOrder extends StatelessWidget {
                                         Icon(Icons.warehouse,size: 20,color: Colors.white,),
                                         SizedBox(width: 5,),
                                         Text(
-                                          "Warehouse: ${authenticationStates.warehouse?.name}",
+                                          "Delivery Location: ${authenticationStates.location?.locDesc}",
                                           style: TextStyle(
                                             fontFamily: 'Montserrat Medium',
                                             color: Colors.white,
@@ -110,8 +110,26 @@ class DeliveryOrder extends StatelessWidget {
                           const SizedBox(
                             height: 40,
                           ),
-                          SearchBar(),
+                          CustomTextEditingField(),
                           const SizedBox(height: 10),
+                          if(state.cartonList.isEmpty)
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("No Active Records Found", textAlign: TextAlign.center),
+                                  ElevatedButton(
+                                      onPressed: () => {
+                                      BlocProvider.of<DeliveryBloc>(context).add(
+                                      DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??""))
+                                      },
+                                      child: const Text(
+                                        "Retry",
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ))
+                                ],
+                              ),
+                            ),
                           Expanded(
                             child: ListView.builder(
                               itemCount: state.cartonList.length,
@@ -184,6 +202,10 @@ class DeliveryOrder extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
+                                      if(state.receiversId.length == 0){
+                                        _showSnackBar(context, "Please Provider Receiver's Id", Colors.red);
+                                        return;
+                                      }
                                       if(state.cartonList.isNotEmpty){
                                         showModalBottomSheet(
                                           context: context,
@@ -288,7 +310,7 @@ class DeliveryOrder extends StatelessWidget {
                                         ).then((value){
                                           if(value == "submitted"){
                                             BlocProvider.of<DeliveryBloc>(context).add(
-                                                DeliveryItemSubmit(state.cartonList,UserDetail.loggedInUser!,authenticationStates.warehouse!));
+                                                DeliveryItemSubmit(state.cartonList,UserDetail.loggedInUser!,state.receiversId,authenticationStates.location?.locID??""));
                                           }
                                         });
                                       }
@@ -350,12 +372,12 @@ class DeliveryOrder extends StatelessWidget {
   }
 }
 
-class SearchBar extends StatefulWidget {
+class CustomTextEditingField extends StatefulWidget {
   @override
-  _SearchBarState createState() => _SearchBarState();
+  _CustomTextEditingFieldState createState() => _CustomTextEditingFieldState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
   final TextEditingController textFieldController = TextEditingController();
   final FocusNode textFieldFocusNode = FocusNode();
 
@@ -378,10 +400,10 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final authenticationStates = context.read<AuthenticationBloc>().state;
     return BlocBuilder<DeliveryBloc, DeliveryState>(builder: (context, state) {
       if (state.status == DeliveryStatus.submit) {
         textFieldFocusNode.unfocus(); // Shrink the keyboard when status is submit
+        textFieldController.clear();
       }
       return Card(
         child: Padding(
@@ -389,52 +411,13 @@ class _SearchBarState extends State<SearchBar> {
           child: Row(
             children: [
               Expanded(
-                child: CupertinoSearchTextField(
-                  focusNode: textFieldFocusNode,
-                  placeholder: "Enter Bol/Carton ID",
-                  borderRadius: BorderRadius.circular(10),
-                  prefixInsets: const EdgeInsets.only(
-                    left: 15,
-                    right: 10,
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  suffixInsets: const EdgeInsets.all(10),
-                  prefixIcon: const Icon(
-                    CupertinoIcons.search,
-                    size: 22,
-                  ),
-                  onSubmitted: (value) {
-                    BlocProvider.of<DeliveryBloc>(context).add(
-                      DeliveryItemAdd(
-                        getTextFromTextField(),
-                        authenticationStates.warehouse!.id,
-                      ),
-                    );
-                    textFieldController.clear();
-                  },
-                  controller: textFieldController,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircularButton(
-                  state: state.status == DeliveryStatus.searchIdLoading
-                      ? CircularButtonState.loading
-                      : CircularButtonState.idle,
-                  idleIcon: Icons.arrow_forward_ios,
-                  onPressed: () {
-                    if (state.status != DeliveryStatus.searchIdLoading) {
-                      BlocProvider.of<DeliveryBloc>(context).add(
-                        DeliveryItemAdd(
-                          getTextFromTextField(),
-                          authenticationStates.warehouse!.id,
-                        ),
-                      );
-                      textFieldController.clear();
-                    }
-                  },
-                ),
+                child: CustomTextField(label: 'Enter Receiver Id',onValueChange: (e){
+                  BlocProvider.of<DeliveryBloc>(context).add(
+                    DeliveryItemReceiverEnteredId(
+                      getTextFromTextField()),
+                  );
+                },
+                controller: textFieldController,)
               ),
             ],
           ),

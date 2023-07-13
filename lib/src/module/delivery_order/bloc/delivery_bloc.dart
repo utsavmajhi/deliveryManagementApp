@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:delivery_management_app/src/models/carton_model.dart';
 import 'package:delivery_management_app/src/models/carton_pick_model.dart';
+import 'package:delivery_management_app/src/models/carton_receive_submit_model.dart';
 import 'package:delivery_management_app/src/models/error_model.dart';
 import 'package:delivery_management_app/src/repository/picking_repo.dart';
 import 'package:equatable/equatable.dart';
@@ -22,10 +23,12 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
 
   DeliveryBloc({required this.pickingRepo}) : super(const DeliveryState()) {
     on<DeliveryItemAdd>(_getCartonsById);
-    on<DeliveryItemEnteredId>(_setSelectedCartonsId);
+    on<DeliveryItemReceiverEnteredId>(_setReceiverId);
     on<DeliveryItemDelete>(_deleteCartonItemFromList);
     on<DeliveryItemResetFailureState>(_resetFailureStatus);
     on<DeliveryItemSubmit>(_deliveryItemSubmit);
+    on<DeliveryItemsFetchByVehicleId>(_getDeliveryItemsByVehicleId);
+
 
   }
 
@@ -36,7 +39,7 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
     String id = event.id;
     try {
       log.info("Getting getAllCartons list");
-      var resp = await pickingRepo.getCartonListById(id,event.storeId,"receive");
+      var resp = await pickingRepo.getCartonListById(id);
       Set<CartonModel> cartonSet = Set<CartonModel>.from(state.cartonList);
       for(var res in resp){
         if(!(state.cartonList.any((carton) => carton.cartonID == res.cartonID))){
@@ -56,15 +59,36 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
     }
   }
 
-  void _setSelectedCartonsId(
-      DeliveryItemEnteredId event, Emitter<DeliveryState> emit) async {
-    String id = event.bolCartonId;
+  void _getDeliveryItemsByVehicleId(
+      DeliveryItemsFetchByVehicleId event, Emitter<DeliveryState> emit) async {
+    emit(state.copyWith(status: DeliveryStatus.searchIdLoading));
+    await Future.delayed(const Duration(milliseconds: 100));
+    String id = event.vehicleId;
     try {
-      emit(state.copyWith(enteredBolCartonId:id));
-    } on Exception catch (e) {
-      emit(state.copyWith(status: DeliveryStatus.failure));
+      log.info("Getting getAllDeliveryItems for vehicle id ${id} list");
+      var resp = await pickingRepo.getDeliveryItemsByVehicleId(id);
+      Set<CartonModel> cartonSet = Set<CartonModel>.from(state.cartonList);
+      for(var res in resp){
+        if(!(state.cartonList.any((carton) => carton.cartonID == res.cartonID))){
+          cartonSet.add(res);
+        }
+      }
+      log.info("Successfully getAllDeliveryItems list");
+      emit(state.copyWith(status: DeliveryStatus.searchIdSuccess, cartonList:cartonSet.toList()));
+    } catch (e) {
+      if(e is ErrorModel){
+        emit(state.copyWith(status: DeliveryStatus.failure,errMsg: e.errorMsg));
+        return;
+      }
+      log.info("Error while getAllCartons list ${e}");
+      emit(state.copyWith(status: DeliveryStatus.failure,errMsg: 'Invalid Vehicle ID '));
       log.severe(e);
     }
+  }
+  void _setReceiverId(
+      DeliveryItemReceiverEnteredId event, Emitter<DeliveryState> emit) async {
+      String id = event.receiversid;
+      emit(state.copyWith(receiversId:id));
   }
 
   void _deleteCartonItemFromList(
@@ -86,12 +110,13 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
       DeliveryItemSubmit event, Emitter<DeliveryState> emit) async {
     List<CartonModel> selectedCartonList = event.validatedCartonsList;
     emit(state.copyWith(status: DeliveryStatus.submit));
-    List<CartonPickModel> modifiedList = selectedCartonList.map((e) => CartonPickModel(
-      cartonID: e.cartonID,
-      storeID:event.warehouse.id,
-      storeDesc: event.warehouse.name,
-      user: event.userId
+    List<CartonReceiveSubmitModel> modifiedList = selectedCartonList.map((e) => CartonReceiveSubmitModel(
+        cartonID: e.cartonID,
+        pickID: e.pickID,
+        receivedBy: event.receivedBy,
+        receivedLoc: event.locId
     )).toList();
+
     try {
       await pickingRepo.deliveryCartons(modifiedList);
       const newInitialState = DeliveryState();

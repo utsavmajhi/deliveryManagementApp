@@ -8,8 +8,7 @@ class TrackingItemInitial extends TrackingEvent{
 }
 class TrackingItemSearch extends TrackingEvent{
   final String id;
-  final String storeId;
-  TrackingItemSearch(this.id,this.storeId);
+  TrackingItemSearch(this.id);
 }
 class TrackingItemDelete extends TrackingEvent{
   final CartonModel cartonObj;

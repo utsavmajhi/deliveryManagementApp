@@ -14,7 +14,7 @@ enum DeliveryStatus {
 class DeliveryState extends Equatable {
   final DeliveryStatus status;
   final String key;
-  final String enteredBolCartonId;
+  final String receiversId;
   final List<CartonModel> cartonList;
   final String errMsg;
 
@@ -22,7 +22,7 @@ class DeliveryState extends Equatable {
     this.status = DeliveryStatus.initial,
     this.key = '',
     this.cartonList = const [],
-    this.enteredBolCartonId= "",
+    this.receiversId= "",
     this.errMsg=''
   });
 
@@ -30,14 +30,14 @@ class DeliveryState extends Equatable {
     DeliveryStatus? status,
     String? key,
     List<CartonModel>? cartonList,
-    String? enteredBolCartonId,
+    String? receiversId,
     String? errMsg
   }) {
     return DeliveryState(
       status: status ?? this.status,
       key: key ?? this.key,
       cartonList: cartonList ?? this.cartonList,
-        enteredBolCartonId: enteredBolCartonId?? this.enteredBolCartonId,
+        receiversId: receiversId?? this.receiversId,
         errMsg: errMsg?? this.errMsg
     );
   }
@@ -48,5 +48,5 @@ class DeliveryState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, key, cartonList,enteredBolCartonId,errMsg];
+  List<Object?> get props => [status, key, cartonList,receiversId,errMsg];
 }

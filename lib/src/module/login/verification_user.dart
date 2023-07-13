@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
-class PickingOrder extends StatelessWidget {
-  const PickingOrder({Key? key}) : super(key: key);
+class VerificationUser extends StatelessWidget {
+  const VerificationUser({Key? key}) : super(key: key);
 
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const PickingOrder());
+    return MaterialPageRoute<void>(builder: (_) => const VerificationUser());
   }
 
   @override

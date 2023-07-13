@@ -122,7 +122,7 @@ class PickingOrder extends StatelessWidget {
                                           width: 5,
                                         ),
                                         Text(
-                                          "Warehouse: ${authenticationStates.warehouse?.name}",
+                                          "Pickup Location: ${authenticationStates.location?.locDesc}",
                                           style: const TextStyle(
                                             fontFamily: 'Montserrat Medium',
                                             color: Colors.white,
@@ -202,7 +202,7 @@ class PickingOrder extends StatelessWidget {
                                   ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context)
-                                          .pop(HomeScreen.route());
+                                          .pop();
                                     },
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.red,
@@ -225,6 +225,7 @@ class PickingOrder extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
+                                      print("MEOW REACHING 1");
                                       if (state.cartonList.length > 0) {
                                         showModalBottomSheet(
                                           context: context,
@@ -389,8 +390,7 @@ class PickingOrder extends StatelessWidget {
                                                 .add(PickingItemSubmit(
                                                     state.cartonList,
                                                 UserDetail.loggedInUser!,
-                                                    authenticationStates
-                                                        .warehouse!));
+                                                    UserDetail.vehicle!,authenticationStates.location?.locID??""));
                                           }
                                         });
                                       }
@@ -528,8 +528,7 @@ class _SearchBarState extends State<SearchBar> {
                     if (state.status != PickingStatus.searchIdLoading) {
                       BlocProvider.of<PickingBloc>(context).add(
                         PickingItemAdd(
-                          getTextFromTextField(),
-                          authenticationStates.warehouse!.id,
+                          getTextFromTextField()
                         ),
                       );
                       textFieldController.clear();

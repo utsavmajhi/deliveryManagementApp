@@ -1,25 +1,22 @@
 class CartonHistory {
   String? user;
   String? dateTimeStamp;
-  String? storeDesc;
+  String? location;
   String? eventType;
-  String? storeID;
   String? cartonID;
 
   CartonHistory(
       {this.user,
         this.dateTimeStamp,
-        this.storeDesc,
+        this.location,
         this.eventType,
-        this.storeID,
         this.cartonID});
 
   CartonHistory.fromJson(Map<String, dynamic> json) {
     user = json['user'];
     dateTimeStamp = json['dateTimeStamp'];
-    storeDesc = json['storeDesc'];
+    location = json['location'];
     eventType = json['eventType'];
-    storeID = json['storeID'];
     cartonID = json['cartonID'];
   }
 
@@ -27,9 +24,8 @@ class CartonHistory {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['user'] = this.user;
     data['dateTimeStamp'] = this.dateTimeStamp;
-    data['storeDesc'] = this.storeDesc;
+    data['location'] = this.location;
     data['eventType'] = this.eventType;
-    data['storeID'] = this.storeID;
     data['cartonID'] = this.cartonID;
     return data;
   }

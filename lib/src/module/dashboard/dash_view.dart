@@ -1,6 +1,7 @@
 import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
 import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
 import 'package:delivery_management_app/src/module/delivery_order/delivery_order.dart';
+import 'package:delivery_management_app/src/module/info_selection/info_selection.dart';
 import 'package:delivery_management_app/src/module/picking_order/picking_order.dart';
 import 'package:delivery_management_app/src/module/tracking_order/tracking_order.dart';
 import 'package:delivery_management_app/src/widgets/curving_container.dart';
@@ -71,7 +72,7 @@ class DashboardScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '${state.warehouse?.name}',
+                              '${UserDetail.vehicle?.vehicleDesc!}',
                               style: const TextStyle(
                                 fontFamily: 'Montserrat Medium',
                                 color: Colors.white,
@@ -110,7 +111,7 @@ class DashboardScreen extends StatelessWidget {
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-                            Navigator.of(context).push(DeliveryOrder.route());
+                            Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InfoSelectionScreen(actionType: 'DELIVERY',)));
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(0.0),
@@ -147,7 +148,7 @@ class DashboardScreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             // GOTO PICKING SCREEN
-                            Navigator.of(context).push(PickingOrder.route());
+                            Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InfoSelectionScreen(actionType: 'PICKING',)));
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
