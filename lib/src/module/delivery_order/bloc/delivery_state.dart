@@ -8,7 +8,9 @@ enum DeliveryStatus {
   submit,
   submitted,
   searchIdLoading,
-  searchIdSuccess
+  searchIdSuccess,
+  scanCartonIdLoading,
+  scanCartonIdSuccess
 }
 
 class DeliveryState extends Equatable {
@@ -17,13 +19,15 @@ class DeliveryState extends Equatable {
   final String receiversId;
   final List<CartonModel> cartonList;
   final String errMsg;
+  final String enteredCartonId;
 
   const DeliveryState({
     this.status = DeliveryStatus.initial,
     this.key = '',
     this.cartonList = const [],
     this.receiversId= "",
-    this.errMsg=''
+    this.errMsg='',
+    this.enteredCartonId=''
   });
 
   DeliveryState copyWith({
@@ -31,22 +35,24 @@ class DeliveryState extends Equatable {
     String? key,
     List<CartonModel>? cartonList,
     String? receiversId,
-    String? errMsg
+    String? errMsg,
+    String? enteredCartonId
   }) {
     return DeliveryState(
       status: status ?? this.status,
       key: key ?? this.key,
       cartonList: cartonList ?? this.cartonList,
         receiversId: receiversId?? this.receiversId,
-        errMsg: errMsg?? this.errMsg
+        errMsg: errMsg?? this.errMsg,
+        enteredCartonId: enteredCartonId?? this.enteredCartonId
     );
   }
 
   @override
   String toString() {
-    return 'DeliveryState{status: $status, key: $key, cartonList: $cartonList}';
+    return 'DeliveryState{status: $status, key: $key, cartonList: $cartonList }';
   }
 
   @override
-  List<Object?> get props => [status, key, cartonList,receiversId,errMsg];
+  List<Object?> get props => [status, key, cartonList,receiversId,errMsg,enteredCartonId];
 }

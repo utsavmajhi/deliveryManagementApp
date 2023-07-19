@@ -48,6 +48,7 @@ class RestApiClient {
   // }
 
   Future<Map<String, String>> buildAuthHeader(CognitoUserSession session) async {
+    print("MEOW buildAuthHeader ${session} ${session.idToken.jwtToken}");
     Map<String, String> map = {
       "Authorization": "${session.idToken.jwtToken}",
       "x-api-key": 'API_KEY',

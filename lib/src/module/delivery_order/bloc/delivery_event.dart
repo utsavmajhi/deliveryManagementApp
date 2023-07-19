@@ -32,6 +32,14 @@ class DeliveryItemReceiverEnteredId extends DeliveryEvent{
   String receiversid;
   DeliveryItemReceiverEnteredId(this.receiversid);
 }
+class DeliveryItemEnterCartonId extends DeliveryEvent{
+  String enteredCartonId;
+  DeliveryItemEnterCartonId(this.enteredCartonId);
+}
+class DeliveryItemValidateCartonId extends DeliveryEvent{
+  String enteredCartonId;
+  DeliveryItemValidateCartonId(this.enteredCartonId);
+}
 class DeliveryItemResetFailureState extends DeliveryEvent{
   DeliveryItemResetFailureState();
 }

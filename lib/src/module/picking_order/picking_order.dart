@@ -21,39 +21,20 @@ class PickingOrder extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     final authenticationStates = context.read<AuthenticationBloc>().state;
 
-    void _showFailureDialog(
-        BuildContext context, String message, String lottieAssetPath) {
-      showDialog(
-        context: context,
-        // barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Container(
-              height: 150,
-              child: Column(
-                children: [
-                  Lottie.asset(
-                    '${lottieAssetPath}', // Replace with your animation file
-                    width: 100,
-                    height: 100,
-                  ),
-                  Text(message),
-                ],
-              ),
-            ),
-            // Lottie.asset('assets/lottie/loading.zip'),
-          );
-        },
-      );
-    }
-
     return BlocProvider(
       create: (context) =>
           PickingBloc(pickingRepo: RepositoryProvider.of(context)),
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
+          title:Text(
+            'Picking Screen',
+            style: TextStyle(
+              fontFamily: 'Montserrat Medium',
+              color: Colors.white,
+              fontSize: 25,
+            ),
+          ) ,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -92,22 +73,14 @@ class PickingOrder extends StatelessWidget {
                         children: <Widget>[
                           Container(
                             height: 64,
-                            margin: const EdgeInsets.only(bottom: 20),
+                            margin: const EdgeInsets.only(bottom: 10),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    const Text(
-                                      'Picking Screen',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat Medium',
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                      ),
-                                    ),
                                     Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -121,15 +94,21 @@ class PickingOrder extends StatelessWidget {
                                         const SizedBox(
                                           width: 5,
                                         ),
-                                        Text(
-                                          "Pickup Location: ${authenticationStates.location?.locDesc}",
-                                          style: const TextStyle(
-                                            fontFamily: 'Montserrat Medium',
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                        Container(
+                                          width: 250,
+                                          child: Text(
+                                            "Pickup Location: \n${authenticationStates.location?.locDesc}",
+                                            style: const TextStyle(
+                                              // fontFamily: 'Montserrat Medium',
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            softWrap: true,
+                                            maxLines: 3, // Set the maximum number of lines to 2 or any desired value
+                                            overflow: TextOverflow.ellipsis, // Truncate the text with an ellipsis
                                           ),
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ],

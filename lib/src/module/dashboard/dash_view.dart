@@ -72,7 +72,8 @@ class DashboardScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '${UserDetail.vehicle?.vehicleDesc!}',
+                              '${UserDetail.vehicle?.vehicleDesc}',
+                              overflow: TextOverflow.clip,
                               style: const TextStyle(
                                 fontFamily: 'Montserrat Medium',
                                 color: Colors.white,

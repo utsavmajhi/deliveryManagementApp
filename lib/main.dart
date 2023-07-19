@@ -16,14 +16,14 @@ Future<void> main() {
     await EasyLocalization.ensureInitialized();
     var customStorage = CustomStorage();
     final userPool = CognitoUserPool(
-      'ap-south-1_XhVn9JS4K',
-      '21afno2d82u7p1ia0ooj6ooot8',
+      'ap-south-1_Hg0sBXW7Q',
+      '5u21orv1gmrsnva5uj3o99h2jq',
       storage: customStorage,
     );
 
     final restClient = RestApiClient(
       userPool: userPool,
-      baseUrl: "https://03p7mgjck2.execute-api.ap-south-1.amazonaws.com/dev",
+      baseUrl: "https://cespfyl04i.execute-api.ap-south-1.amazonaws.com/dev",
     );
 
     runApp(

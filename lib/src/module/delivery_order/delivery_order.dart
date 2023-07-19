@@ -1,3 +1,4 @@
+import 'package:delivery_management_app/src/models/carton_model.dart';
 import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
 import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
 import 'package:delivery_management_app/src/module/dashboard/home_screen.dart';
@@ -29,6 +30,14 @@ class DeliveryOrder extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
+          title: Text(
+            'Delivery Screen',
+            style: TextStyle(
+              fontFamily: 'Montserrat Medium',
+              color: Colors.white,
+              fontSize: 25,
+            ),
+          ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: (){
@@ -53,8 +62,13 @@ class DeliveryOrder extends StatelessWidget {
                 },
                 builder: (context, state) {
                   var uniqueBolObjSet = <String>{};
+                  var uniqueScannedBolObjSet = <String>{};
+
                   for (var obj in state.cartonList) {
                     var desc = obj.bolID;
+                    if(obj.scanned){
+                      uniqueScannedBolObjSet.add(desc!);
+                    }
                     uniqueBolObjSet.add(desc!);
                   }
                   return IgnorePointer(
@@ -74,27 +88,25 @@ class DeliveryOrder extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
-                                      'Delivery Screen',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat Medium',
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                      ),
-                                    ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
                                         Icon(Icons.warehouse,size: 20,color: Colors.white,),
                                         SizedBox(width: 5,),
-                                        Text(
-                                          "Delivery Location: ${authenticationStates.location?.locDesc}",
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat Medium',
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                        Container(
+                                          width: 250,
+                                          child: Text(
+                                            "Delivery Location: ${authenticationStates.location?.locDesc}",
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat Medium',
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            softWrap: true,
+                                            maxLines: 3, // Set the maximum number of lines to 2 or any desired value
+                                            overflow: TextOverflow.ellipsis, // Truncate the text with an ellipsis
                                           ),
                                         ),
                                       ],
@@ -114,7 +126,9 @@ class DeliveryOrder extends StatelessWidget {
                           const SizedBox(height: 10),
                           if(state.cartonList.isEmpty)
                             Center(
-                              child: Column(
+                              child: state.status == DeliveryStatus.searchIdLoading? CircularProgressIndicator()
+                                  :
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text("No Active Records Found", textAlign: TextAlign.center),
@@ -137,7 +151,7 @@ class DeliveryOrder extends StatelessWidget {
                                 return Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.grey,
+                                      color: state.cartonList[index].scanned? Colors.green:Colors.grey,
                                       width: 1.0,
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
@@ -145,8 +159,8 @@ class DeliveryOrder extends StatelessWidget {
                                   margin: const EdgeInsets.symmetric(vertical: 4.0),
                                   child: ListTile(
                                     title: Text(state.cartonList[index].cartonID??""),
-                                    leading: Icon(Icons.verified,size: 30),
-                                    iconColor:Colors.lightGreen,
+                                    leading: state.cartonList[index].scanned ? Icon(Icons.verified,size: 30):Icon(Icons.qr_code_scanner,size: 30),
+                                    iconColor:state.cartonList[index].scanned ? Colors.lightGreen:Colors.grey,
                                     subtitle: Text("Bol No: ${state.cartonList[index].bolID??""}"),
                                     trailing: IconButton(
                                       icon: const Icon(Icons.delete,color: Colors.black26,),
@@ -206,7 +220,7 @@ class DeliveryOrder extends StatelessWidget {
                                         _showSnackBar(context, "Please Provider Receiver's Id", Colors.red);
                                         return;
                                       }
-                                      if(state.cartonList.isNotEmpty){
+                                      if(uniqueScannedBolObjSet.isNotEmpty){
                                         showModalBottomSheet(
                                           context: context,
                                           isScrollControlled: true,
@@ -251,13 +265,13 @@ class DeliveryOrder extends StatelessWidget {
                                                   Expanded(
                                                     child: Center(
                                                         child: ListView.builder(
-                                                            itemCount: uniqueBolObjSet.length,
+                                                            itemCount: uniqueScannedBolObjSet.length,
                                                             itemBuilder: (BuildContext context,int index){
                                                               var bolID =
-                                                              uniqueBolObjSet.elementAt(index);
+                                                              uniqueScannedBolObjSet.elementAt(index);
                                                               var groupedItems = state.cartonList
                                                                   .where(
-                                                                      (item) => item.bolID == bolID)
+                                                                      (item) => item.bolID == bolID && item.scanned)
                                                                   .toList();
                                                               return Container(
                                                                 decoration: BoxDecoration(
@@ -309,15 +323,16 @@ class DeliveryOrder extends StatelessWidget {
                                           },
                                         ).then((value){
                                           if(value == "submitted"){
+                                            List<CartonModel> eligibleCartons = state.cartonList.where((carton) => carton.scanned == true).toList();
                                             BlocProvider.of<DeliveryBloc>(context).add(
-                                                DeliveryItemSubmit(state.cartonList,UserDetail.loggedInUser!,state.receiversId,authenticationStates.location?.locID??""));
+                                                DeliveryItemSubmit(eligibleCartons,UserDetail.loggedInUser!,state.receiversId,authenticationStates.location?.locID??""));
                                           }
                                         });
                                       }
 
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      primary: state.cartonList.isEmpty? Colors.grey:Colors.blue,
+                                      primary: uniqueScannedBolObjSet.isEmpty? Colors.grey:Colors.blue,
                                       onPrimary: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -354,13 +369,16 @@ class DeliveryOrder extends StatelessWidget {
                       lottieAssetPath: 'assets/lottie/loading.zip',
                     ),
                   );
-                case DeliveryStatus.submitted:
+                case DeliveryStatus.submitted:{
+                  BlocProvider.of<DeliveryBloc>(context).add(
+                      DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??""));
                   return const Positioned(
                     child: CustomDialog(
                       message: 'Done!',
                       lottieAssetPath: 'assets/lottie/test.json',
                     ),
                   );
+                }
                 default:
                   return const SizedBox.shrink();
               }
@@ -379,6 +397,8 @@ class CustomTextEditingField extends StatefulWidget {
 
 class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
   final TextEditingController textFieldController = TextEditingController();
+  final TextEditingController cartonIdScannerFieldController = TextEditingController();
+
   final FocusNode textFieldFocusNode = FocusNode();
 
   @override
@@ -398,6 +418,9 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
     return textFieldController.text;
   }
 
+  String getTextFromCartonIDTextField() {
+    return cartonIdScannerFieldController.text;
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DeliveryBloc, DeliveryState>(builder: (context, state) {
@@ -408,16 +431,67 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Row(
+          child: Column(
             children: [
-              Expanded(
-                child: CustomTextField(label: 'Enter Receiver Id',onValueChange: (e){
-                  BlocProvider.of<DeliveryBloc>(context).add(
-                    DeliveryItemReceiverEnteredId(
-                      getTextFromTextField()),
-                  );
-                },
-                controller: textFieldController,)
+              Row(
+                children: [
+                  Expanded(
+                    child: CupertinoSearchTextField(
+                      placeholder: "Scan Carton ID",
+                      borderRadius: BorderRadius.circular(10),
+                      prefixInsets: const EdgeInsets.only(
+                        left: 15,
+                        right: 10,
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      suffixInsets: const EdgeInsets.all(10),
+                      prefixIcon: const Icon(
+                        CupertinoIcons.barcode,
+                        size: 22,
+                      ),
+                      onSubmitted: (value) {
+                        BlocProvider.of<DeliveryBloc>(context).add(
+                          DeliveryItemValidateCartonId(value),
+                        );
+                        cartonIdScannerFieldController.clear();
+                      },
+                      controller: cartonIdScannerFieldController,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularButton(
+                      state: state.status == DeliveryStatus.scanCartonIdLoading
+                          ? CircularButtonState.loading
+                          : CircularButtonState.idle,
+                      idleIcon: Icons.arrow_forward_ios,
+                      onPressed: () {
+                        if (state.status != DeliveryStatus.scanCartonIdLoading) {
+                          BlocProvider.of<DeliveryBloc>(context).add(
+                            DeliveryItemValidateCartonId(
+                                getTextFromCartonIDTextField()
+                            ),
+                          );
+                          cartonIdScannerFieldController.clear();
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextField(label: 'Enter Receiver Id',onValueChange: (e){
+                      BlocProvider.of<DeliveryBloc>(context).add(
+                        DeliveryItemReceiverEnteredId(
+                          getTextFromTextField()),
+                      );
+                    },
+                    controller: textFieldController,)
+                  ),
+                ],
               ),
             ],
           ),

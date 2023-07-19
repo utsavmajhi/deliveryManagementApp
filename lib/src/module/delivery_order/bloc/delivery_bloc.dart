@@ -24,11 +24,12 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
   DeliveryBloc({required this.pickingRepo}) : super(const DeliveryState()) {
     on<DeliveryItemAdd>(_getCartonsById);
     on<DeliveryItemReceiverEnteredId>(_setReceiverId);
+    on<DeliveryItemEnterCartonId>(_setCartonId);
     on<DeliveryItemDelete>(_deleteCartonItemFromList);
     on<DeliveryItemResetFailureState>(_resetFailureStatus);
     on<DeliveryItemSubmit>(_deliveryItemSubmit);
     on<DeliveryItemsFetchByVehicleId>(_getDeliveryItemsByVehicleId);
-
+    on<DeliveryItemValidateCartonId>(_validateCartonId);
 
   }
 
@@ -90,6 +91,11 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
       String id = event.receiversid;
       emit(state.copyWith(receiversId:id));
   }
+  void _setCartonId(
+      DeliveryItemEnterCartonId event, Emitter<DeliveryState> emit) async {
+    String id = event.enteredCartonId;
+    emit(state.copyWith(enteredCartonId:id));
+  }
 
   void _deleteCartonItemFromList(
       DeliveryItemDelete event, Emitter<DeliveryState> emit) async {
@@ -106,9 +112,33 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
     }
   }
 
+  void _validateCartonId(
+      DeliveryItemValidateCartonId event, Emitter<DeliveryState> emit) async {
+    String scannedCartonId = event.enteredCartonId;
+    var cartonListCopy = List<CartonModel>.from(state.cartonList);
+
+    // var matchingCartons = cartonListCopy.where((carton) => carton.cartonID == scannedCartonId).toList();
+    int indexToChange = cartonListCopy.indexWhere((carton) => carton.cartonID == scannedCartonId);
+    print("MEOW _validateCartonId ${indexToChange} ${scannedCartonId}");
+    if (indexToChange != -1) {
+      // If a carton with the scannedCartonId is found, update the desired object properties.
+      cartonListCopy[indexToChange] = CartonModel(cartonID: cartonListCopy[indexToChange].cartonID,bolID: cartonListCopy[indexToChange].bolID,pickID: cartonListCopy[indexToChange].pickID,scanned: true);
+    } else {
+      // Carton with the scannedCartonId not found.
+      emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "CartonID doesnt found"));
+    }
+    try {
+      emit(state.copyWith(cartonList:[...cartonListCopy]));
+    } on Exception catch (e) {
+      emit(state.copyWith(status: DeliveryStatus.failure));
+      log.severe(e);
+    }
+  }
+
   void _deliveryItemSubmit(
       DeliveryItemSubmit event, Emitter<DeliveryState> emit) async {
     List<CartonModel> selectedCartonList = event.validatedCartonsList;
+    print("MEOW VALIDATED LIST ${event.validatedCartonsList}");
     emit(state.copyWith(status: DeliveryStatus.submit));
     List<CartonReceiveSubmitModel> modifiedList = selectedCartonList.map((e) => CartonReceiveSubmitModel(
         cartonID: e.cartonID,
@@ -123,6 +153,7 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
       emit(newInitialState.copyWith(status: DeliveryStatus.submitted));
       await Future.delayed(const Duration(milliseconds: 5000));
       emit(newInitialState.copyWith(status: DeliveryStatus.initial));
+
     } on Exception catch (e) {
       emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "Delivery items not Submitted"));
       log.severe(e);

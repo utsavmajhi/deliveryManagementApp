@@ -129,7 +129,7 @@ class FetchInfoSelectionBoard extends StatelessWidget {
               SizedBox(
                   height: 200,
                   child: Image.asset(
-                    'assets/images/warehouse.png',
+                    actionType == "PICKING"? 'assets/images/deliveryLocation.png':'assets/images/pickup.png',
                     fit: BoxFit.contain,
                   )),
               const SizedBox(height: 20),
