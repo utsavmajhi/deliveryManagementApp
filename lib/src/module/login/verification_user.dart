@@ -1,9 +1,9 @@
-import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
-import 'package:delivery_management_app/src/module/dashboard/home_screen.dart';
-import 'package:delivery_management_app/src/module/picking_order/bloc/picking_bloc.dart';
-import 'package:delivery_management_app/src/widgets/curving_container.dart';
-import 'package:delivery_management_app/src/widgets/custom_circular_button.dart';
-import 'package:delivery_management_app/src/widgets/custom_text_field.dart';
+import 'package:POD/src/module/authentication/bloc/authentication_bloc.dart';
+import 'package:POD/src/module/dashboard/home_screen.dart';
+import 'package:POD/src/module/picking_order/bloc/picking_bloc.dart';
+import 'package:POD/src/widgets/curving_container.dart';
+import 'package:POD/src/widgets/custom_circular_button.dart';
+import 'package:POD/src/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';

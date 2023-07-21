@@ -1,4 +1,4 @@
-name: delivery_management_app
+name: POD
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -49,14 +48,10 @@ dependencies:
   permission_handler: ^10.0.0
   flutter_barcode_scanner: ^2.0.0
   lottie: ^2.4.0
-  popup_banner: ^1.0.0
   flutter_platform_widgets: ^3.3.5
   dropdown_search: ^5.0.5
   font_awesome_flutter: ^10.1.0
   timeline_tile: ^2.0.0
-  timelines: ^0.1.0
-  auto_size_text: ^3.0.0
-
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +69,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+    # The "icon" property should point to the path of the app icon
+    # relative to the pubspec.yaml file location
+    # Example: "assets/icon/app_icon.png"
+    # The icons should already be placed in the appropriate folders as explained in Step 1
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

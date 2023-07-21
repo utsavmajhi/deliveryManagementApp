@@ -1,10 +1,10 @@
-import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
-import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
-import 'package:delivery_management_app/src/module/delivery_order/delivery_order.dart';
-import 'package:delivery_management_app/src/module/info_selection/info_selection.dart';
-import 'package:delivery_management_app/src/module/picking_order/picking_order.dart';
-import 'package:delivery_management_app/src/module/tracking_order/tracking_order.dart';
-import 'package:delivery_management_app/src/widgets/curving_container.dart';
+import 'package:POD/src/module/authentication/bloc/authentication_bloc.dart';
+import 'package:POD/src/module/authentication/user_mixin.dart';
+import 'package:POD/src/module/delivery_order/delivery_order.dart';
+import 'package:POD/src/module/info_selection/info_selection.dart';
+import 'package:POD/src/module/picking_order/picking_order.dart';
+import 'package:POD/src/module/tracking_order/tracking_order.dart';
+import 'package:POD/src/widgets/curving_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/custom_dropdown.dart';

@@ -43,6 +43,15 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'snum_keystore'
+            keyPassword 'Snumbers@2023' // Leave this blank if your keystore doesn't have a password
+            storeFile file('snum_keystore.keystore')
+            storePassword 'Snumbers@2023'
+        }
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.snumbers.delivery_management_app"
@@ -58,7 +67,7 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

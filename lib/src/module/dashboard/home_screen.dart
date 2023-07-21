@@ -1,4 +1,4 @@
-import 'package:delivery_management_app/src/module/dashboard/dash_view.dart';
+import 'package:POD/src/module/dashboard/dash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../config/theme_settings.dart';

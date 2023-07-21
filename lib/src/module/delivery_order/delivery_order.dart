@@ -1,17 +1,14 @@
-import 'package:delivery_management_app/src/models/carton_model.dart';
-import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
-import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
-import 'package:delivery_management_app/src/module/dashboard/home_screen.dart';
-import 'package:delivery_management_app/src/module/delivery_order/bloc/delivery_bloc.dart';
-import 'package:delivery_management_app/src/module/picking_order/bloc/picking_bloc.dart';
-import 'package:delivery_management_app/src/module/picking_order/picking_order.dart';
-import 'package:delivery_management_app/src/widgets/curving_container.dart';
-import 'package:delivery_management_app/src/widgets/custom_circular_button.dart';
-import 'package:delivery_management_app/src/widgets/custom_text_field.dart';
+import 'package:POD/src/models/carton_model.dart';
+import 'package:POD/src/module/authentication/bloc/authentication_bloc.dart';
+import 'package:POD/src/module/authentication/user_mixin.dart';
+import 'package:POD/src/module/dashboard/home_screen.dart';
+import 'package:POD/src/module/delivery_order/bloc/delivery_bloc.dart';
+import 'package:POD/src/module/picking_order/picking_order.dart';
+import 'package:POD/src/widgets/custom_circular_button.dart';
+import 'package:POD/src/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 class DeliveryOrder extends StatelessWidget {
   const DeliveryOrder({Key? key}) : super(key: key);
@@ -28,29 +25,43 @@ class DeliveryOrder extends StatelessWidget {
     return BlocProvider(
       create: (context) => DeliveryBloc(pickingRepo: RepositoryProvider.of(context))..add(DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??"")),
       child: Scaffold(
-        extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Text(
-            'Delivery Screen',
-            style: TextStyle(
-              fontFamily: 'Montserrat Medium',
-              color: Colors.white,
-              fontSize: 25,
-            ),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: (){
-              Navigator.of(context).pop(HomeScreen.route());
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+  backgroundColor: Colors.green,
+  title: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Delivery Screen',
+        style: TextStyle(
+          fontFamily: 'Montserrat Medium',
+          color: Colors.white,
+          fontSize: 20,
         ),
+      ),
+      Text(
+        '${authenticationStates.location?.locDesc}',
+        style: TextStyle(
+          fontFamily: 'Montserrat Regular',
+          color: Colors.white,
+          fontSize: 14,
+        ),
+      ),
+    ],
+  ),
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: (){
+      Navigator.of(context).pop(HomeScreen.route());
+    },
+  ),
+  elevation: 0,
+),
+
         body: Stack(
           alignment: Alignment.topRight,
           children: <Widget>[
-            CurvingContainer(size: size / 1.4),
+            // CurvingContainer(size: size / 1.2),
             SafeArea(
               child: BlocConsumer<DeliveryBloc, DeliveryState>(
                 listener: (context, state) {
@@ -78,52 +89,8 @@ class DeliveryOrder extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            height: 64,
-                            margin: const EdgeInsets.only(bottom: 20),
-                            child:  Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(Icons.warehouse,size: 20,color: Colors.white,),
-                                        SizedBox(width: 5,),
-                                        Container(
-                                          width: 250,
-                                          child: Text(
-                                            "Delivery Location: ${authenticationStates.location?.locDesc}",
-                                            style: TextStyle(
-                                              fontFamily: 'Montserrat Medium',
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                            softWrap: true,
-                                            maxLines: 3, // Set the maximum number of lines to 2 or any desired value
-                                            overflow: TextOverflow.ellipsis, // Truncate the text with an ellipsis
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
                           CustomTextEditingField(),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                           if(state.cartonList.isEmpty)
                             Center(
                               child: state.status == DeliveryStatus.searchIdLoading? CircularProgressIndicator()
@@ -156,18 +123,36 @@ class DeliveryOrder extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  margin: const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: ListTile(
-                                    title: Text(state.cartonList[index].cartonID??""),
-                                    leading: state.cartonList[index].scanned ? Icon(Icons.verified,size: 30):Icon(Icons.qr_code_scanner,size: 30),
-                                    iconColor:state.cartonList[index].scanned ? Colors.lightGreen:Colors.grey,
-                                    subtitle: Text("Bol No: ${state.cartonList[index].bolID??""}"),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.delete,color: Colors.black26,),
-                                      onPressed: () {
-                                        BlocProvider.of<DeliveryBloc>(context).add(
-                                            DeliveryItemDelete(state.cartonList[index]));
-                                      },
+                                  margin: const EdgeInsets.symmetric(vertical: 2.0),
+                                  child:Container(
+                                    height: 50,
+                                    child: ListTile(
+                                      dense: true,
+                                      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                                      title: Text(
+                                        state.cartonList[index].cartonID ?? "",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      leading: state.cartonList[index].scanned
+                                          ? Icon(Icons.verified, size: 20)
+                                          : Icon(Icons.qr_code_scanner, size: 20),
+                                      iconColor: state.cartonList[index].scanned
+                                          ? Colors.lightGreen
+                                          : Colors.grey,
+                                      subtitle: Text(
+                                        "Bol No: ${state.cartonList[index].bolID ?? ""}",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      trailing: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(Icons.delete, color: Colors.redAccent, size: 18), // Reduced icon size
+                                        onPressed: () {
+                                          BlocProvider.of<DeliveryBloc>(context).add(
+                                            DeliveryItemDelete(state.cartonList[index]),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 );
@@ -217,7 +202,7 @@ class DeliveryOrder extends StatelessWidget {
                                   ElevatedButton(
                                     onPressed: () {
                                       if(state.receiversId.length == 0){
-                                        _showSnackBar(context, "Please Provider Receiver's Id", Colors.red);
+                                        _showSnackBar(context, "Please Provide Receiver's Id", Colors.red);
                                         return;
                                       }
                                       if(uniqueScannedBolObjSet.isNotEmpty){
@@ -362,6 +347,10 @@ class DeliveryOrder extends StatelessWidget {
             ),
             BlocBuilder<DeliveryBloc, DeliveryState>(builder: (context, state) {
               switch (state.status) {
+                case DeliveryStatus.initial:
+                  BlocProvider.of<DeliveryBloc>(context).add(
+                      DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??""));
+                  return SizedBox.shrink();
                 case DeliveryStatus.submit:
                   return const Positioned(
                     child: CustomDialog(
@@ -370,8 +359,8 @@ class DeliveryOrder extends StatelessWidget {
                     ),
                   );
                 case DeliveryStatus.submitted:{
-                  BlocProvider.of<DeliveryBloc>(context).add(
-                      DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??""));
+                  // BlocProvider.of<DeliveryBloc>(context).add(
+                  //     DeliveryItemsFetchByVehicleId(UserDetail.vehicle?.vehicleID??""));
                   return const Positioned(
                     child: CustomDialog(
                       message: 'Done!',
@@ -410,6 +399,7 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
   @override
   void dispose() {
     textFieldController.dispose();
+    cartonIdScannerFieldController.dispose();
     textFieldFocusNode.dispose();
     super.dispose();
   }
@@ -427,74 +417,70 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
       if (state.status == DeliveryStatus.submit) {
         textFieldFocusNode.unfocus(); // Shrink the keyboard when status is submit
         textFieldController.clear();
+        cartonIdScannerFieldController.clear();
       }
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CupertinoSearchTextField(
-                      placeholder: "Scan Carton ID",
-                      borderRadius: BorderRadius.circular(10),
-                      prefixInsets: const EdgeInsets.only(
-                        left: 15,
-                        right: 10,
-                        top: 10,
-                        bottom: 10,
-                      ),
-                      suffixInsets: const EdgeInsets.all(10),
-                      prefixIcon: const Icon(
-                        CupertinoIcons.barcode,
-                        size: 22,
-                      ),
-                      onSubmitted: (value) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: CupertinoSearchTextField(
+                    focusNode: textFieldFocusNode,
+                    placeholder: "Scan Carton ID",
+                    borderRadius: BorderRadius.circular(8),
+                    prefixInsets: const EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
+                    suffixInsets: const EdgeInsets.all(2),
+                    prefixIcon: const Icon(
+                      CupertinoIcons.barcode,
+                      size: 20,
+                    ),
+                    onSubmitted: (value) {
+                      BlocProvider.of<DeliveryBloc>(context).add(
+                        DeliveryItemValidateCartonId(value),
+                      );
+                      cartonIdScannerFieldController.clear();
+                    },
+                    controller: cartonIdScannerFieldController,
+                  ),
+
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularButton(
+                    state: state.status == DeliveryStatus.scanCartonIdLoading
+                        ? CircularButtonState.loading
+                        : CircularButtonState.idle,
+                    idleIcon: Icons.arrow_forward_ios,
+                    onPressed: () {
+                      if (state.status != DeliveryStatus.scanCartonIdLoading) {
                         BlocProvider.of<DeliveryBloc>(context).add(
-                          DeliveryItemValidateCartonId(value),
+                          DeliveryItemValidateCartonId(
+                              getTextFromCartonIDTextField()
+                          ),
                         );
                         cartonIdScannerFieldController.clear();
-                      },
-                      controller: cartonIdScannerFieldController,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularButton(
-                      state: state.status == DeliveryStatus.scanCartonIdLoading
-                          ? CircularButtonState.loading
-                          : CircularButtonState.idle,
-                      idleIcon: Icons.arrow_forward_ios,
-                      onPressed: () {
-                        if (state.status != DeliveryStatus.scanCartonIdLoading) {
-                          BlocProvider.of<DeliveryBloc>(context).add(
-                            DeliveryItemValidateCartonId(
-                                getTextFromCartonIDTextField()
-                            ),
-                          );
-                          cartonIdScannerFieldController.clear();
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(label: 'Enter Receiver Id',onValueChange: (e){
-                      BlocProvider.of<DeliveryBloc>(context).add(
-                        DeliveryItemReceiverEnteredId(
-                          getTextFromTextField()),
-                      );
+                      }
                     },
-                    controller: textFieldController,)
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomTextField(label: 'Enter Receiver Id',onValueChange: (e){
+                    BlocProvider.of<DeliveryBloc>(context).add(
+                      DeliveryItemReceiverEnteredId(
+                        getTextFromTextField()),
+                    );
+                  },
+                  controller: textFieldController,)
+                ),
+              ],
+            ),
+          ],
         ),
       );
     });

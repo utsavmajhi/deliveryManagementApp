@@ -77,8 +77,8 @@ class _CircularButtonState extends State<CircularButton> with SingleTickerProvid
           return Transform.rotate(
             angle:widget.state ==CircularButtonState.idle ?0: _animationController.value * 6.3, // 6.3 radians = 360 degrees
             child: Container(
-              width: 50.0,
-              height: 50.0,
+              width: 35.0,
+              height: 35.0,
               decoration: BoxDecoration(
                 color: getColor(widget.state),
                 shape: BoxShape.circle,
@@ -86,6 +86,7 @@ class _CircularButtonState extends State<CircularButton> with SingleTickerProvid
               child: Icon(
                 icon,
                 color: Colors.white,
+                size: 20,
               ),
             ),
           );

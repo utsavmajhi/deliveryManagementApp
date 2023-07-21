@@ -1,9 +1,9 @@
-import 'package:delivery_management_app/src/models/vehicle_model.dart';
-import 'package:delivery_management_app/src/models/warehouse_list_model.dart';
-import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
-import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
-import 'package:delivery_management_app/src/module/dashboard/home_screen.dart';
-import 'package:delivery_management_app/src/module/vehicle_selection/bloc/vehicle_bloc.dart';
+import 'package:POD/src/models/vehicle_model.dart';
+import 'package:POD/src/models/warehouse_list_model.dart';
+import 'package:POD/src/module/authentication/bloc/authentication_bloc.dart';
+import 'package:POD/src/module/authentication/user_mixin.dart';
+import 'package:POD/src/module/dashboard/home_screen.dart';
+import 'package:POD/src/module/vehicle_selection/bloc/vehicle_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/custom_dropdown.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

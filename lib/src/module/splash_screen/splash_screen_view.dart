@@ -21,7 +21,7 @@ class SplashScreen extends StatelessWidget {
             backgroundColor: Colors.white,
             radius: 100,
             backgroundImage: AssetImage(
-              'assets/images/inspection.png',
+              'assets/images/MainIcon.png',
             ),
           ),
         ),

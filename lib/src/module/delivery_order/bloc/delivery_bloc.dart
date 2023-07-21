@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:delivery_management_app/src/models/carton_model.dart';
-import 'package:delivery_management_app/src/models/carton_pick_model.dart';
-import 'package:delivery_management_app/src/models/carton_receive_submit_model.dart';
-import 'package:delivery_management_app/src/models/error_model.dart';
-import 'package:delivery_management_app/src/repository/picking_repo.dart';
+import 'package:POD/src/models/carton_model.dart';
+import 'package:POD/src/models/carton_pick_model.dart';
+import 'package:POD/src/models/carton_receive_submit_model.dart';
+import 'package:POD/src/models/error_model.dart';
+import 'package:POD/src/repository/picking_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -138,7 +138,6 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
   void _deliveryItemSubmit(
       DeliveryItemSubmit event, Emitter<DeliveryState> emit) async {
     List<CartonModel> selectedCartonList = event.validatedCartonsList;
-    print("MEOW VALIDATED LIST ${event.validatedCartonsList}");
     emit(state.copyWith(status: DeliveryStatus.submit));
     List<CartonReceiveSubmitModel> modifiedList = selectedCartonList.map((e) => CartonReceiveSubmitModel(
         cartonID: e.cartonID,
@@ -153,7 +152,6 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
       emit(newInitialState.copyWith(status: DeliveryStatus.submitted));
       await Future.delayed(const Duration(milliseconds: 5000));
       emit(newInitialState.copyWith(status: DeliveryStatus.initial));
-
     } on Exception catch (e) {
       emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "Delivery items not Submitted"));
       log.severe(e);

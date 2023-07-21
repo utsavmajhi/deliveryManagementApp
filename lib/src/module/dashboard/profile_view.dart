@@ -1,5 +1,5 @@
-import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
-import 'package:delivery_management_app/src/widgets/curving_container.dart';
+import 'package:POD/src/module/authentication/user_mixin.dart';
+import 'package:POD/src/widgets/curving_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

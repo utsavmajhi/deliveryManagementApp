@@ -1,9 +1,9 @@
-import 'package:delivery_management_app/src/module/authentication/bloc/authentication_bloc.dart';
-import 'package:delivery_management_app/src/module/authentication/user_mixin.dart';
-import 'package:delivery_management_app/src/module/dashboard/home_screen.dart';
-import 'package:delivery_management_app/src/module/picking_order/bloc/picking_bloc.dart';
-import 'package:delivery_management_app/src/widgets/curving_container.dart';
-import 'package:delivery_management_app/src/widgets/custom_circular_button.dart';
+import 'package:POD/src/module/authentication/bloc/authentication_bloc.dart';
+import 'package:POD/src/module/authentication/user_mixin.dart';
+import 'package:POD/src/module/dashboard/home_screen.dart';
+import 'package:POD/src/module/picking_order/bloc/picking_bloc.dart';
+import 'package:POD/src/widgets/curving_container.dart';
+import 'package:POD/src/widgets/custom_circular_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,27 +27,39 @@ class PickingOrder extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title:Text(
-            'Picking Screen',
-            style: TextStyle(
-              fontFamily: 'Montserrat Medium',
-              color: Colors.white,
-              fontSize: 25,
-            ),
-          ) ,
+          title:Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Picking Screen',
+                style: TextStyle(
+                  fontFamily: 'Montserrat Medium',
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                '${authenticationStates.location?.locDesc}',
+                style: TextStyle(
+                  fontFamily: 'Montserrat Regular', // You can change the font and other styles here
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop(HomeScreen.route());
             },
           ),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.green,
           elevation: 0,
         ),
         body: Stack(
           alignment: Alignment.topRight,
           children: <Widget>[
-            CurvingContainer(size: size / 1.4),
             SafeArea(
               child: BlocConsumer<PickingBloc, PickingState>(
                 listener: (context, state) {
@@ -71,57 +83,6 @@ class PickingOrder extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            height: 64,
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        const Icon(
-                                          Icons.warehouse,
-                                          size: 25,
-                                          color: Colors.white,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: 250,
-                                          child: Text(
-                                            "Pickup Location: \n${authenticationStates.location?.locDesc}",
-                                            style: const TextStyle(
-                                              // fontFamily: 'Montserrat Medium',
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                            softWrap: true,
-                                            maxLines: 3, // Set the maximum number of lines to 2 or any desired value
-                                            overflow: TextOverflow.ellipsis, // Truncate the text with an ellipsis
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  width: 16,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
                           SearchBar(),
                           const SizedBox(height: 10),
                           Expanded(
@@ -138,23 +99,29 @@ class PickingOrder extends StatelessWidget {
                                   ),
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: ListTile(
-                                    title: Text(
-                                        state.cartonList[index].cartonID ?? ""),
-                                    leading: const Icon(Icons.verified, size: 30),
-                                    iconColor: Colors.lightGreen,
-                                    subtitle: Text(
-                                        "Bol No: ${state.cartonList[index].bolID ?? ""}"),
-                                    trailing: IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.black26,
+                                  child: Container(
+                                    height: 50,
+                                    child: ListTile(
+                                      dense: true,
+                                      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                                      title: Text(
+                                          state.cartonList[index].cartonID ?? ""),
+                                      leading: const Icon(Icons.verified, size: 20),
+                                      iconColor: Colors.lightGreen,
+                                      subtitle: Text(
+                                          "Bol No: ${state.cartonList[index].bolID ?? ""}"),
+                                      trailing: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                            color: Colors.redAccent, size: 18
+                                        ),
+                                        onPressed: () {
+                                          BlocProvider.of<PickingBloc>(context).add(
+                                              PickingItemDelete(
+                                                  state.cartonList[index]));
+                                        },
                                       ),
-                                      onPressed: () {
-                                        BlocProvider.of<PickingBloc>(context).add(
-                                            PickingItemDelete(
-                                                state.cartonList[index]));
-                                      },
                                     ),
                                   ),
                                 );
@@ -461,7 +428,6 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final authenticationStates = context.read<AuthenticationBloc>().state;
     return BlocBuilder<PickingBloc, PickingState>(builder: (context, state) {
       if (state.status == PickingStatus.submit) {
         textFieldFocusNode.unfocus(); // Shrink the keyboard when status is submit
@@ -475,17 +441,12 @@ class _SearchBarState extends State<SearchBar> {
                 child: CupertinoSearchTextField(
                   focusNode: textFieldFocusNode,
                   placeholder: "Enter Bol/Carton ID",
-                  borderRadius: BorderRadius.circular(10),
-                  prefixInsets: const EdgeInsets.only(
-                    left: 15,
-                    right: 10,
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  suffixInsets: const EdgeInsets.all(10),
+                  borderRadius: BorderRadius.circular(8),
+                  prefixInsets: const EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
+                  suffixInsets: const EdgeInsets.all(2),
                   prefixIcon: const Icon(
                     CupertinoIcons.search,
-                    size: 22,
+                    size: 20,
                   ),
                   onSubmitted: (value) {
                     BlocProvider.of<PickingBloc>(context).add(

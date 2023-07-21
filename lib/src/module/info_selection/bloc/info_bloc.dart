@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:delivery_management_app/src/models/entity_model.dart';
-import 'package:delivery_management_app/src/models/loc_model.dart';
-import 'package:delivery_management_app/src/models/warehouse_list_model.dart';
+import 'package:POD/src/models/entity_model.dart';
+import 'package:POD/src/models/loc_model.dart';
+import 'package:POD/src/models/warehouse_list_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

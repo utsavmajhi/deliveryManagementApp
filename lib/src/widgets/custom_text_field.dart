@@ -26,35 +26,32 @@ class CustomTextField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
 
-  const CustomTextField(
-      {Key? key,
-      this.icon,
-      this.suffixIcon,
-      this.helperText,
-      required this.label,
-      this.maxLines = 1,
-      this.minLines = 1,
-      this.initialValue,
-      this.onValueChange,
-      this.textInputType,
-      this.errorText,
-        this.inputFormatters,
-      this.controller,
-      this.focusNode,
-      this.onTap,
-      this.validator,
-      this.enabled,
-      this.onFieldSubmitted,
-      this.textCapitalization = TextCapitalization.none,
-      this.obscureText = false,
-      this.style = const TextStyle(
-        fontWeight: FontWeight.w600,
-      ),
-        this.crossAxisAlignment = CrossAxisAlignment.start,
-      this.textAlign = TextAlign.start,
-      this.prefixIconConstraint =
-          const BoxConstraints(minWidth: 40, minHeight: 40)})
-      : super(key: key);
+  const CustomTextField({
+    Key? key,
+    this.icon,
+    this.suffixIcon,
+    this.helperText,
+    required this.label,
+    this.maxLines = 1,
+    this.minLines = 1,
+    this.initialValue,
+    this.onValueChange,
+    this.textInputType,
+    this.errorText,
+    this.inputFormatters,
+    this.controller,
+    this.focusNode,
+    this.onTap,
+    this.validator,
+    this.enabled,
+    this.onFieldSubmitted,
+    this.textCapitalization = TextCapitalization.none,
+    this.obscureText = false,
+    this.style = const TextStyle(fontWeight: FontWeight.w600),
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.textAlign = TextAlign.start,
+    this.prefixIconConstraint = const BoxConstraints(minWidth: 40, minHeight: 40),
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,22 +60,28 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-              fontWeight: FontWeight.w400, color: Color(0xFF6B7281)),
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 14, // Reduced font size for smaller screens
+            color: Color(0xFF6B7281),
+          ),
         ),
         if (helperText != null && helperText!.isNotEmpty)
-          Text(helperText!,
-              style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  color: Colors.black38,
-                  fontSize: 12)),
+          Text(
+            helperText!,
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color: Colors.black38,
+              fontSize: 10, // Reduced font size for helper text
+            ),
+          ),
         const SizedBox(
           height: 1,
         ),
         Container(
           decoration: BoxDecoration(
-              //color: AppColor.background,
-              borderRadius: BorderRadius.circular(5)),
+            borderRadius: BorderRadius.circular(5),
+          ),
           child: TextFormField(
             autovalidateMode: AutovalidateMode.always,
             validator: validator,
@@ -93,29 +96,31 @@ class CustomTextField extends StatelessWidget {
             cursorColor: const Color(0xFF008080),
             textAlign: textAlign,
             inputFormatters: inputFormatters,
-            style: style,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16, // Reduced font size for text input
+            ),
             onTap: onTap,
             onFieldSubmitted: onFieldSubmitted,
             enabled: enabled,
             textCapitalization: textCapitalization,
             decoration: InputDecoration(
-              errorStyle:
-                  const TextStyle(height: 1, overflow: TextOverflow.fade),
-              focusedBorder: const OutlineInputBorder(
+              errorStyle: TextStyle(height: 1, overflow: TextOverflow.fade),
+              focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xFFB1B4E6), width: 2.0),
               ),
               prefixIconConstraints: prefixIconConstraint,
               prefixIcon: icon,
               suffixIcon: suffixIcon,
-              contentPadding: const EdgeInsets.all(12),
-              border: const OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 8), // Reduced padding
+              border: OutlineInputBorder(),
               isDense: true,
               errorText: errorText,
             ),
           ),
         ),
         const SizedBox(
-          height: 12,
+          height: 8, // Reduced vertical spacing
         ),
       ],
     );

@@ -33,14 +33,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  auto_size_text:
-    dependency: "direct main"
-    description:
-      name: auto_size_text
-      sha256: "3f5261cd3fb5f2a9ab4e2fc3fba84fd9fcaac8821f20a1d4e71f557521b22599"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   bloc:
     dependency: transitive
     description:
@@ -461,14 +453,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.3"
-  popup_banner:
-    dependency: "direct main"
-    description:
-      name: popup_banner
-      sha256: "6db86b01af4eef701804c1f8d8a9b8b5f601a7db4fd87a148f28ead5d4b04e22"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   process:
     dependency: transitive
     description:
@@ -610,14 +594,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  timelines:
-    dependency: "direct main"
-    description:
-      name: timelines
-      sha256: "40214f5ab772ff45459cb8c15e5f60505a6828af0c0eb1eec6f29ed911a4c1c5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   typed_data:
     dependency: transitive
     description:
