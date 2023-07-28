@@ -119,13 +119,12 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
 
     // var matchingCartons = cartonListCopy.where((carton) => carton.cartonID == scannedCartonId).toList();
     int indexToChange = cartonListCopy.indexWhere((carton) => carton.cartonID == scannedCartonId);
-    print("MEOW _validateCartonId ${indexToChange} ${scannedCartonId}");
     if (indexToChange != -1) {
       // If a carton with the scannedCartonId is found, update the desired object properties.
       cartonListCopy[indexToChange] = CartonModel(cartonID: cartonListCopy[indexToChange].cartonID,bolID: cartonListCopy[indexToChange].bolID,pickID: cartonListCopy[indexToChange].pickID,scanned: true);
     } else {
       // Carton with the scannedCartonId not found.
-      emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "CartonID doesnt found"));
+      emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "Invalid CartonId"));
     }
     try {
       emit(state.copyWith(cartonList:[...cartonListCopy]));

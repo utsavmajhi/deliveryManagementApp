@@ -46,6 +46,10 @@ class PickingBloc extends Bloc<PickingEvent, PickingState> {
     try {
       log.info("Getting getAllCartons list");
       var resp = await pickingRepo.getCartonListById(id);
+      if(resp.length == 0){
+        emit(state.copyWith(status: PickingStatus.failure,errMsg: 'Invalid Carton/Bol ID'));
+        return;
+      }
       Set<CartonModel> cartonSet = Set<CartonModel>.from(state.cartonList);
       for(var res in resp){
         if(!(state.cartonList.any((carton) => carton.cartonID == res.cartonID))){

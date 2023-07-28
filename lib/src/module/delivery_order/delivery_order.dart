@@ -415,9 +415,12 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
   Widget build(BuildContext context) {
     return BlocBuilder<DeliveryBloc, DeliveryState>(builder: (context, state) {
       if (state.status == DeliveryStatus.submit) {
-        textFieldFocusNode.unfocus(); // Shrink the keyboard when status is submit
+        textFieldFocusNode.unfocus();
         textFieldController.clear();
         cartonIdScannerFieldController.clear();
+      }
+      if(state.status == DeliveryStatus.submitted){
+        textFieldFocusNode.requestFocus();
       }
       return Padding(
         padding: const EdgeInsets.all(10.0),
@@ -461,6 +464,7 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
                           ),
                         );
                         cartonIdScannerFieldController.clear();
+                        textFieldFocusNode.requestFocus();
                       }
                     },
                   ),
@@ -486,6 +490,7 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
     });
   }
 }
+
 void _showSnackBar(BuildContext context, String message,Color color) {
   final snackBar = SnackBar(content: Text(message),backgroundColor: color);
   ScaffoldMessenger.of(context).showSnackBar(snackBar);

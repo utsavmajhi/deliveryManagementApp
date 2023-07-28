@@ -27,7 +27,7 @@ class PickingOrder extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title:Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -41,7 +41,8 @@ class PickingOrder extends StatelessWidget {
               Text(
                 '${authenticationStates.location?.locDesc}',
                 style: TextStyle(
-                  fontFamily: 'Montserrat Regular', // You can change the font and other styles here
+                  fontFamily:
+                      'Montserrat Regular', // You can change the font and other styles here
                   color: Colors.white,
                   fontSize: 14,
                 ),
@@ -78,8 +79,8 @@ class PickingOrder extends StatelessWidget {
                   return IgnorePointer(
                     ignoring: state.status == PickingStatus.submit,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -103,22 +104,24 @@ class PickingOrder extends StatelessWidget {
                                     height: 50,
                                     child: ListTile(
                                       dense: true,
-                                      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                                      visualDensity: VisualDensity(
+                                          horizontal: -4, vertical: -4),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 8),
                                       title: Text(
-                                          state.cartonList[index].cartonID ?? ""),
-                                      leading: const Icon(Icons.verified, size: 20),
+                                          state.cartonList[index].cartonID ??
+                                              ""),
+                                      leading:
+                                          const Icon(Icons.verified, size: 20),
                                       iconColor: Colors.lightGreen,
                                       subtitle: Text(
                                           "Bol No: ${state.cartonList[index].bolID ?? ""}"),
                                       trailing: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                            color: Colors.redAccent, size: 18
-                                        ),
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.redAccent, size: 18),
                                         onPressed: () {
-                                          BlocProvider.of<PickingBloc>(context).add(
-                                              PickingItemDelete(
+                                          BlocProvider.of<PickingBloc>(context)
+                                              .add(PickingItemDelete(
                                                   state.cartonList[index]));
                                         },
                                       ),
@@ -143,12 +146,12 @@ class PickingOrder extends StatelessWidget {
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   ElevatedButton(
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .pop();
+                                      Navigator.of(context).pop();
                                     },
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.red,
@@ -171,22 +174,24 @@ class PickingOrder extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      print("MEOW REACHING 1");
                                       if (state.cartonList.length > 0) {
                                         showModalBottomSheet(
                                           context: context,
                                           isScrollControlled: true,
                                           builder: (BuildContext context) {
                                             return Container(
-                                              padding: const EdgeInsets.all(20.0),
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
                                                   0.8,
                                               decoration: const BoxDecoration(
                                                 borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(20.0),
-                                                  topRight: Radius.circular(20.0),
+                                                  topLeft:
+                                                      Radius.circular(20.0),
+                                                  topRight:
+                                                      Radius.circular(20.0),
                                                 ),
                                               ),
                                               child: Column(
@@ -208,10 +213,12 @@ class PickingOrder extends StatelessWidget {
                                                             style: TextStyle(
                                                               fontFamily:
                                                                   'Montserrat Medium',
-                                                              color: Colors.green,
+                                                              color:
+                                                                  Colors.green,
                                                               fontSize: 25,
                                                               fontWeight:
-                                                                  FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                             ),
                                                           ),
                                                         ],
@@ -249,8 +256,8 @@ class PickingOrder extends StatelessWidget {
                                                               return Container(
                                                                 decoration:
                                                                     BoxDecoration(
-                                                                  border:
-                                                                      Border.all(
+                                                                  border: Border
+                                                                      .all(
                                                                     color: Colors
                                                                         .grey,
                                                                     width: 1.0,
@@ -270,9 +277,10 @@ class PickingOrder extends StatelessWidget {
                                                                       true,
                                                                   title: Text(
                                                                       'BOL ID: ${bolID}'),
-                                                                  leading: const Icon(
-                                                                      Icons
-                                                                          .format_bold_outlined),
+                                                                  leading:
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .format_bold_outlined),
                                                                   children:
                                                                       groupedItems
                                                                           .map(
@@ -300,15 +308,15 @@ class PickingOrder extends StatelessWidget {
                                                       Navigator.of(context)
                                                           .pop("submitted");
                                                     },
-                                                    style:
-                                                        ElevatedButton.styleFrom(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
                                                       primary: Colors.blue,
                                                       onPrimary: Colors.white,
                                                       shape:
                                                           RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                8),
+                                                            BorderRadius
+                                                                .circular(8),
                                                       ),
                                                     ),
                                                     child: const Padding(
@@ -332,11 +340,15 @@ class PickingOrder extends StatelessWidget {
                                           },
                                         ).then((value) {
                                           if (value == "submitted") {
-                                            BlocProvider.of<PickingBloc>(context)
+                                            BlocProvider.of<PickingBloc>(
+                                                    context)
                                                 .add(PickingItemSubmit(
                                                     state.cartonList,
-                                                UserDetail.loggedInUser!,
-                                                    UserDetail.vehicle!,authenticationStates.location?.locID??""));
+                                                    UserDetail.loggedInUser!,
+                                                    UserDetail.vehicle!,
+                                                    authenticationStates
+                                                            .location?.locID ??
+                                                        ""));
                                           }
                                         });
                                       }
@@ -423,14 +435,19 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   String getTextFromTextField() {
-    return textFieldController.text;
+    var scannedText = textFieldController.text.replaceAll('\n', '');
+    return scannedText.trim();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PickingBloc, PickingState>(builder: (context, state) {
       if (state.status == PickingStatus.submit) {
-        textFieldFocusNode.unfocus(); // Shrink the keyboard when status is submit
+        textFieldFocusNode
+            .unfocus(); // Shrink the keyboard when status is submit
+      }
+      if(state.status == PickingStatus.submitted){
+        textFieldFocusNode.requestFocus();
       }
       return Card(
         child: Padding(
@@ -442,7 +459,8 @@ class _SearchBarState extends State<SearchBar> {
                   focusNode: textFieldFocusNode,
                   placeholder: "Enter Bol/Carton ID",
                   borderRadius: BorderRadius.circular(8),
-                  prefixInsets: const EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
+                  prefixInsets: const EdgeInsets.only(
+                      left: 10, right: 5, top: 5, bottom: 5),
                   suffixInsets: const EdgeInsets.all(2),
                   prefixIcon: const Icon(
                     CupertinoIcons.search,
@@ -450,9 +468,10 @@ class _SearchBarState extends State<SearchBar> {
                   ),
                   onSubmitted: (value) {
                     BlocProvider.of<PickingBloc>(context).add(
-                      PickingItemEnteredId(value),
+                      PickingItemAdd(getTextFromTextField()),
                     );
                     textFieldController.clear();
+                    textFieldFocusNode.requestFocus();
                   },
                   controller: textFieldController,
                 ),
@@ -467,11 +486,10 @@ class _SearchBarState extends State<SearchBar> {
                   onPressed: () {
                     if (state.status != PickingStatus.searchIdLoading) {
                       BlocProvider.of<PickingBloc>(context).add(
-                        PickingItemAdd(
-                          getTextFromTextField()
-                        ),
+                        PickingItemAdd(getTextFromTextField()),
                       );
                       textFieldController.clear();
+                      textFieldFocusNode.requestFocus();
                     }
                   },
                 ),
