@@ -405,11 +405,13 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
   }
 
   String getTextFromTextField() {
-    return textFieldController.text;
+    var scannedText = textFieldController.text.replaceAll('\n', '');
+    return scannedText.trim();
   }
 
   String getTextFromCartonIDTextField() {
-    return cartonIdScannerFieldController.text;
+    var scannedText = cartonIdScannerFieldController.text.replaceAll('\n', '');
+    return scannedText.trim();
   }
   @override
   Widget build(BuildContext context) {
@@ -441,9 +443,10 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
                     ),
                     onSubmitted: (value) {
                       BlocProvider.of<DeliveryBloc>(context).add(
-                        DeliveryItemValidateCartonId(value),
+                        DeliveryItemValidateCartonId(getTextFromCartonIDTextField()),
                       );
                       cartonIdScannerFieldController.clear();
+                      textFieldFocusNode.requestFocus();
                     },
                     controller: cartonIdScannerFieldController,
                   ),
