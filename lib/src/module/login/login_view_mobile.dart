@@ -47,37 +47,54 @@ class _LoginViewMobileState extends State<LoginViewMobile> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      backgroundColor: Colors.green,
-        body: BlocProvider(
-      create: (context) => LoginBloc(
+      backgroundColor: Colors.blueGrey[50],
+      body: BlocProvider(
+        create: (context) => LoginBloc(
           userPool: RepositoryProvider.of(context),
-          authenticationBloc: BlocProvider.of(context)),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(),
-                    buildSingleChildScrollView(context),
-                  ],
+          authenticationBloc: BlocProvider.of(context),
+        ),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: ListView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.all(20),
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/apparel-logo.png',
+                    ),
+                    height: 100,
+                  ),
                 ),
               ),
-            )
-
-          ],
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(),
+                      buildSingleChildScrollView(context),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Widget buildSingleChildScrollView(BuildContext context) {
@@ -99,7 +116,6 @@ class _LoginViewMobileState extends State<LoginViewMobile> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   const SizedBox(
@@ -126,7 +142,7 @@ class _LoginViewMobileState extends State<LoginViewMobile> {
               right: 0,
               child: CircleAvatar(
                 radius: 40,
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.blue,
                 child: CircleAvatar(
                   radius: 38,
                   backgroundColor: Colors.white,
