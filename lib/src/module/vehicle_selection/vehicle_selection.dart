@@ -44,6 +44,18 @@ class WarehouseSelectionListBody extends StatelessWidget {
             Icons.warehouse, // Add your desired icon
             color: Colors.white, // Set the icon color
           ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.logout, // Your desired logout icon
+                color: Colors.white, // Set the icon color
+              ),
+              onPressed: () {
+                context.read<AuthenticationBloc>().add(LogOutUserEvent());
+              },
+            ),
+          ],
+
         ),
         body: BlocBuilder<FetchVehicleBloc, FetchVehicleState>(
           builder: (context, state) {
