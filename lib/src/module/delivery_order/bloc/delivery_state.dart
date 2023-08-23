@@ -2,6 +2,7 @@ part of 'delivery_bloc.dart';
 
 enum DeliveryStatus {
   initial,
+  progress,
   loading,
   success,
   failure,

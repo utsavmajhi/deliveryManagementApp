@@ -115,19 +115,23 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
   void _validateCartonId(
       DeliveryItemValidateCartonId event, Emitter<DeliveryState> emit) async {
     String scannedCartonId = event.enteredCartonId;
-    var cartonListCopy = List<CartonModel>.from(state.cartonList);
+    List<CartonModel> cartonListCopy = List<CartonModel>.from(state.cartonList);
 
     // var matchingCartons = cartonListCopy.where((carton) => carton.cartonID == scannedCartonId).toList();
-    int indexToChange = cartonListCopy.indexWhere((carton) => carton.cartonID == scannedCartonId);
-    if (indexToChange != -1) {
-      // If a carton with the scannedCartonId is found, update the desired object properties.
-      cartonListCopy[indexToChange] = CartonModel(cartonID: cartonListCopy[indexToChange].cartonID,bolID: cartonListCopy[indexToChange].bolID,pickID: cartonListCopy[indexToChange].pickID,scanned: true);
-    } else {
-      // Carton with the scannedCartonId not found.
-      emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "Invalid CartonId"));
+    List<CartonModel> matchedCartons = cartonListCopy.where((carton) => carton.cartonID == scannedCartonId || carton.bolID == scannedCartonId).toList();
+    if(matchedCartons.isEmpty){
+      emit(state.copyWith(status: DeliveryStatus.failure,errMsg: "Invalid CartonId/Bol Id"));
+      return;
+    }
+
+    for (CartonModel carton in matchedCartons) {
+      carton.scanned = true;
     }
     try {
-      emit(state.copyWith(cartonList:[...cartonListCopy]));
+      emit(state.copyWith(status: DeliveryStatus.progress));
+      Set<CartonModel> mergedSet = {...cartonListCopy, ...matchedCartons};
+      List<CartonModel> mergedList = mergedSet.toList();
+      emit(state.copyWith(cartonList: [...mergedList],status: DeliveryStatus.scanCartonIdSuccess));
     } on Exception catch (e) {
       emit(state.copyWith(status: DeliveryStatus.failure));
       log.severe(e);
@@ -159,6 +163,6 @@ class DeliveryBloc extends Bloc<DeliveryEvent, DeliveryState> {
 
   void _resetFailureStatus(
       DeliveryItemResetFailureState event, Emitter<DeliveryState> emit) async {
-    emit(state.copyWith(status: DeliveryStatus.initial));
+    emit(state.copyWith(status: DeliveryStatus.progress));
   }
 }
