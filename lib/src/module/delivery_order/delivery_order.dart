@@ -345,9 +345,7 @@ class DeliveryOrder extends StatelessWidget {
                                                                       true,
                                                                   title: Text(
                                                                       'BOL ID: ${bolID}'),
-                                                                  leading: Icon(
-                                                                      Icons
-                                                                          .format_bold_outlined),
+                                                                  leading: Text('${groupedItems.length}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                                                                   children:
                                                                       groupedItems
                                                                           .map(
@@ -604,7 +602,8 @@ class _CustomTextEditingFieldState extends State<CustomTextEditingField> {
                           onTap: () {
                             textFieldController.clear();
                             BlocProvider.of<DeliveryBloc>(context).add(
-                              DeliveryItemReceiverEnteredId(getTextFromTextField()),
+                              DeliveryItemReceiverEnteredId(
+                                  getTextFromTextField()),
                             );
                           },
                           child: Icon(

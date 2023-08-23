@@ -278,9 +278,7 @@ class PickingOrder extends StatelessWidget {
                                                                   title: Text(
                                                                       'BOL ID: ${bolID}'),
                                                                   leading:
-                                                                      const Icon(
-                                                                          Icons
-                                                                              .format_bold_outlined),
+                                                                  Text('${groupedItems.length}',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                                                                   children:
                                                                       groupedItems
                                                                           .map(
