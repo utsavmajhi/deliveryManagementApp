@@ -101,6 +101,7 @@ class PickingBloc extends Bloc<PickingEvent, PickingState> {
     emit(state.copyWith(status: PickingStatus.submit));
     List<CartonPickModel> modifiedList = selectedCartonList.map((e) => CartonPickModel(
       cartonID: e.cartonID,
+      bolID: e.bolID,
       vehicleID: event.vehicle.vehicleID,
       user: event.userId,
       pickLoc: event.pickLoc
